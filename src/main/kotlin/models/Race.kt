@@ -67,5 +67,7 @@ data class Race(var raceId: Int = 0,
                         }
                         return true // A race with no horses can be archived, or all horses have completed the race
                     }
+
+
 }
 

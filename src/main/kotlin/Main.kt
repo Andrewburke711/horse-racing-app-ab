@@ -20,6 +20,7 @@ fun runMenu() {
             4 -> deleteRace()
             5 -> addHorseToRace()
             6 -> updateHorseContentsInRace()
+
             10 -> searchRaces()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
