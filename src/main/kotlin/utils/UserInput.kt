@@ -56,3 +56,19 @@ fun readNextChar(prompt: String?): Char {
         }
     } while (true)
 }
+
+fun readNextBoolean(prompt: String?): Boolean {
+    do {
+        try {
+            print(prompt)
+            val input = readln().trim().lowercase()
+            return when (input) {
+                "true" -> true
+                "false" -> false
+                else -> throw IllegalArgumentException("Please enter 'true' or 'false'.")
+            }
+        } catch (e: IllegalArgumentException) {
+            System.err.println("\tEnter 'true' or 'false' please.")
+        }
+    } while (true)
+}

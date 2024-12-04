@@ -1,65 +1,44 @@
-import controllers.NoteAPI
-import ie.setu.models.Note
+import controllers.RaceAPI
+import ie.setu.models.Race
+import utils.readNextBoolean
+import utils.readNextFloat
 import utils.readNextInt
 import utils.readNextLine
 import kotlin.system.exitProcess
 
-private val noteAPI = NoteAPI()
+private val raceAPI = RaceAPI()
 
 fun main() = runMenu()
 
 fun runMenu() {
     do {
         when (val option = mainMenu()) {
-            1 -> addNote()
-            2 -> listNotes()
-            3 -> updateNote()
-            4 -> deleteNote()
-            5 -> archiveNote()
-            //6 -> addItemToNote()
-            //7 -> updateItemContentsInNote()
-            //8 -> deleteAnItem()
-            //9 -> markItemStatus()
-            10 -> searchNotes()
-            //15 -> searchItems()
-            //16 -> listToDoItems()
+            1 -> addRace()
+            2 -> listRaces()
+            3 -> updateRace()
+            4 -> deleteRace()
+           // 5 -> archiveRace()
+            10 -> searchRaces()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
     } while (true)
 }
 
+
 fun mainMenu() = readNextInt(
     """ 
          > -----------------------------------------------------  
-         > |                  NOTE KEEPER APP                  |
+         > |                  RACE KEEPER APP                  |
          > -----------------------------------------------------  
-         > | NOTE MENU                                         |
-         > |   1) Add a note                                   |
-         > |   2) List notes                                   |
-         > |   3) Update a note                                |
-         > |   4) Delete a note                                |
-         > |   5) Archive a note                               |
+         > | HORSE MENU                                         | 
+         > |   1) Add a race                                    |
+         > |   2) List races                                    |
+         > |   3) Update a race                                 |
+         > |   4) Delete a race                                 |
          > -----------------------------------------------------  
-         > | ITEM MENU                                         | 
-         > |   6) Add item to a note                           |
-         > |   7) Update item contents on a note               |
-         > |   8) Delete item from a note                      |
-         > |   9) Mark item as complete/todo                   | 
-         > -----------------------------------------------------  
-         > | REPORT MENU FOR NOTES                             | 
-         > |   10) Search for all notes (by note title)        |
-         > |   11) .....                                       |
-         > |   12) .....                                       |
-         > |   13) .....                                       |
-         > |   14) .....                                       |
-         > -----------------------------------------------------  
-         > | REPORT MENU FOR ITEMS                             |                                
-         > |   15) Search for all items (by item description)  |
-         > |   16) List TODO Items                             |
-         > |   17) .....                                       |
-         > |   18) .....                                       |
-         > |   19) .....                                       |
+         > | REPORT MENU FOR HORSES                             | 
+         > |   10) Search for all horses (by race title)        |
          > -----------------------------------------------------  
          > |   0) Exit                                         |
          > -----------------------------------------------------  
@@ -67,13 +46,17 @@ fun mainMenu() = readNextInt(
 )
 
 //------------------------------------
-//NOTE MENU
+//RACE MENU
 //------------------------------------
-fun addNote() {
-    val noteTitle = readNextLine("Enter a title for the note: ")
-    val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-    val noteCategory = readNextLine("Enter a category for the note: ")
-    val isAdded = noteAPI.add(Note(noteTitle = noteTitle, notePriority = notePriority, noteCategory = noteCategory))
+fun addRace() {
+    val raceTitle = readNextLine("Enter a title for the race: ")
+    val raceDistance = readNextFloat("Enter a distance (Miles): ")
+    val raceClass = readNextLine("Enter a class for the race: ")
+    val raceStartTime = readNextLine("Enter a time for the race start: ")
+    val raceTrackCondition = readNextLine("Enter track condition: ")
+    val isRaceFinished = readNextBoolean("Is race finished (True/False): ")
+    val isAdded = raceAPI.add(Race(raceTitle = raceTitle, raceDistance = raceDistance, raceClass = raceClass, raceStartTime =
+    raceStartTime, raceTrackCondition = raceTrackCondition, isRaceFinished = isRaceFinished  ))
 
     if (isAdded) {
         println("Added Successfully")
@@ -82,63 +65,66 @@ fun addNote() {
     }
 }
 
-fun listNotes() {
-    if (noteAPI.numberOfNotes() > 0) {
+fun listRaces() {
+    if (raceAPI.numberOfRaces() > 0) {
         val option = readNextInt(
             """
                   > --------------------------------
-                  > |   1) View ALL notes          |
-                  > |   2) View ACTIVE notes       |
-                  > |   3) View ARCHIVED notes     |
+                  > |   1) View ALL races           |
+                  > |   2) View FINISHED races      |
+                  > |   3) View FUTURE races        |
                   > --------------------------------
          > ==>> """.trimMargin(">")
         )
 
         when (option) {
-            1 -> listAllNotes()
-            2 -> listActiveNotes()
-            3 -> listArchivedNotes()
+            1 -> listAllRaces()
+            2 -> listFinishedRaces()
+            3 -> listFutureRaces()
             else -> println("Invalid option entered: $option")
         }
     } else {
-        println("Option Invalid - No notes stored")
+        println("Option Invalid - No horses stored")
     }
 }
 
-fun listAllNotes() = println(noteAPI.listAllNotes())
-fun listActiveNotes() = println(noteAPI.listActiveNotes())
-fun listArchivedNotes() = println(noteAPI.listArchivedNotes())
+fun listAllRaces() = println(raceAPI.listAllRaces())
+fun listFinishedRaces() = println(raceAPI.listFinishedRaces())
+fun listFutureRaces() = println(raceAPI.listFutureRaces())
 
-fun updateNote() {
-    listNotes()
-    if (noteAPI.numberOfNotes() > 0) {
-        // only ask the user to choose the note if notes exist
-        val id = readNextInt("Enter the id of the note to update: ")
-        if (noteAPI.findNote(id) != null) {
-            val noteTitle = readNextLine("Enter a title for the note: ")
-            val notePriority = readNextInt("Enter a priority (1-low, 2, 3, 4, 5-high): ")
-            val noteCategory = readNextLine("Enter a category for the note: ")
+fun updateRace() {
+    listRaces()
+    if (raceAPI.numberOfRaces() > 0) {
+        // only ask the user to choose the horse if horses exist
+        val id = readNextInt("Enter the id of the horse to update: ")
+        if (raceAPI.findRace(id) != null) {
+            val raceTitle = readNextLine("Enter a title for the race: ")
+            val raceDistance = readNextFloat("Enter a distance (Miles): ")
+            val raceClass = readNextLine("Enter a class for the race: ")
+            val raceStartTime = readNextLine("Enter a time for the race start: ")
+            val raceTrackCondition = readNextLine("Enter a time for the race start: ")
+            val isRaceFinished = readNextBoolean("Is race finished (True/False): ")
 
-            // pass the index of the note and the new note details to NoteAPI for updating and check for success.
-            if (noteAPI.update(id, Note(0, noteTitle, notePriority, noteCategory, false))){
+            // pass the index of the horse and the new horse details to RaceAPI for updating and check for success.
+            if (raceAPI.update(id, Race(0, raceTitle, raceDistance, raceClass, raceStartTime, raceTrackCondition, isRaceFinished))) {
                 println("Update Successful")
             } else {
                 println("Update Failed")
             }
         } else {
-            println("There are no notes for this index number")
+            println("There are no horses for this index number")
         }
     }
 }
 
-fun deleteNote() {
-    listNotes()
-    if (noteAPI.numberOfNotes() > 0) {
-        // only ask the user to choose the note to delete if notes exist
-        val id = readNextInt("Enter the id of the note to delete: ")
-        // pass the index of the note to NoteAPI for deleting and check for success.
-        val noteToDelete = noteAPI.delete(id)
-        if (noteToDelete) {
+fun deleteRace() {
+    listRaces()
+    if (raceAPI.numberOfRaces() > 0) {
+        // only ask the user to choose the horse to delete if horses exist
+        val id = readNextInt("Enter the id of the horse to delete: ")
+        // pass the index of the horse to RaceAPI for deleting and check for success.
+        val horseToDelete = raceAPI.delete(id)
+        if (horseToDelete) {
             println("Delete Successful!")
         } else {
             println("Delete NOT Successful")
@@ -146,44 +132,32 @@ fun deleteNote() {
     }
 }
 
-fun archiveNote() {
-    listActiveNotes()
-    if (noteAPI.numberOfActiveNotes() > 0) {
-        // only ask the user to choose the note to archive if active notes exist
-        val id = readNextInt("Enter the id of the note to archive: ")
-        // pass the index of the note to NoteAPI for archiving and check for success.
-        if (noteAPI.archiveNote(id)) {
-            println("Archive Successful!")
-        } else {
-            println("Archive NOT Successful")
-        }
-    }
-}
-
-//-------------------------------------------
-//ITEM MENU (only available for active notes)
-//-------------------------------------------
-
-//TODO
+//fun archiveHorse() {
+//    listActiveHorses()
+//    if (raceAPI.numberOfActiveHorses() > 0) {
+//        // only ask the user to choose the horse to archive if active horses exist
+//        val id = readNextInt("Enter the id of the horse to archive: ")
+//        // pass the index of the horse to RaceAPI for archiving and check for success.
+//        if (raceAPI.archiveHorse(id)) {
+//            println("Archive Successful!")
+//        } else {
+//            println("Archive NOT Successful")
+//        }
+//    }
+//}
 
 //------------------------------------
-//NOTE REPORTS MENU
+//HORSE REPORTS MENU
 //------------------------------------
-fun searchNotes() {
+fun searchRaces() {
     val searchTitle = readNextLine("Enter the description to search by: ")
-    val searchResults = noteAPI.searchNotesByTitle(searchTitle)
+    val searchResults = raceAPI.searchRacesByTitle(searchTitle)
     if (searchResults.isEmpty()) {
-        println("No notes found")
+        println("No horses found")
     } else {
         println(searchResults)
     }
 }
-
-//------------------------------------
-//ITEM REPORTS MENU
-//------------------------------------
-
-//TODO
 
 //------------------------------------
 // Exit App
@@ -197,19 +171,19 @@ fun exitApp() {
 //HELPER FUNCTIONS
 //------------------------------------
 
-private fun askUserToChooseActiveNote(): Note? {
-    listActiveNotes()
-    if (noteAPI.numberOfActiveNotes() > 0) {
-        val note = noteAPI.findNote(readNextInt("\nEnter the id of the note: "))
-        if (note != null) {
-            if (note.isNoteArchived) {
-                println("Note is NOT Active, it is Archived")
-            } else {
-                return note //chosen note is active
-            }
-        } else {
-            println("Note id is not valid")
-        }
-    }
-    return null //selected note is not active
-}
+//private fun askUserToChooseActiveHorse(): Race? {
+//    listActiveHorses()
+//    if (raceAPI.numberOfActiveHorses() > 0) {
+//        val horse = raceAPI.findHorse(readNextInt("\nEnter the id of the horse: "))
+//        if (horse != null) {
+//            if (horse.isHorseArchived) {
+//                println("Horse is NOT Active, it is Archived")
+//            } else {
+//                return horse //chosen horse is active
+//            }
+//        } else {
+//            println("Horse id is not valid")
+//        }
+//    }
+//    return null //selected horse is not active
+//}

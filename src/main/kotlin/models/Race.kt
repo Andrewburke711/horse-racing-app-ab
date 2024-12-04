@@ -6,4 +6,5 @@ data class Race(var raceId: Int = 0,
                 var raceClass: String,
                 var raceStartTime: String,
                 var raceTrackCondition: String,
+                var isRaceFinished: Boolean,
     )

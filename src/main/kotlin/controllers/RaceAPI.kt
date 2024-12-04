@@ -1,12 +1,12 @@
 package controllers
 
-import ie.setu.models.Note
+import ie.setu.models.Race
 import utils.formatListString
 import java.util.ArrayList
 
-class NoteAPI() {
+class RaceAPI() {
 
-    private var notes = ArrayList<Note>()
+    private var races = ArrayList<Race>()
 
     // ----------------------------------------------
     //  For Managing the id internally in the program
@@ -15,70 +15,73 @@ class NoteAPI() {
     private fun getId() = lastId++
 
     // ----------------------------------------------
-    //  CRUD METHODS FOR NOTE ArrayList
+    //  CRUD METHODS FOR RACE ArrayList
     // ----------------------------------------------
-    fun add(note: Note): Boolean {
-        note.noteId = getId()
-        return notes.add(note)
+    fun add(race: Race): Boolean {
+        race.raceId = getId()
+        return races.add(race)
     }
 
-    fun delete(id: Int) = notes.removeIf { note -> note.noteId == id }
+    fun delete(id: Int) = races.removeIf { race -> race.raceId == id }
 
-    fun update(id: Int, note: Note?): Boolean {
-        // find the note object by the index number
-        val foundNote = findNote(id)
+    fun update(id: Int, race: Race?): Boolean {
+        // find the race object by the index number
+        val foundRace = findRace(id)
 
-        // if the note exists, use the note details passed as parameters to update the found note in the ArrayList.
-        if ((foundNote != null) && (note != null)) {
-            foundNote.noteTitle = note.noteTitle
-            foundNote.notePriority = note.notePriority
-            foundNote.noteCategory = note.noteCategory
+        // if the race exists, use the race details passed as parameters to update the found race in the ArrayList.
+        if ((foundRace != null) && (race != null)) {
+            foundRace.raceTitle = race.raceTitle
+            foundRace.raceDistance = race.raceDistance
+            foundRace.raceClass = race.raceClass
+            foundRace.raceStartTime = race.raceStartTime
+            foundRace.raceTrackCondition = race.raceTrackCondition
+            foundRace.isRaceFinished = race.isRaceFinished
             return true
         }
 
-        // if the note was not found, return false, indicating that the update was not successful
+        // if the race was not found, return false, indicating that the update was not successful
         return false
     }
 
-    fun archiveNote(id: Int): Boolean {
-        val foundNote = findNote(id)
-        if (( foundNote != null) && (!foundNote.isNoteArchived)
-          //  && ( foundNote.checkNoteCompletionStatus())
+    fun archiveRace(id: Int): Boolean {
+        val foundRace = findRace(id)
+        if (( foundRace != null) && (!foundRace.isRaceFinished)
+          //  && ( foundRace.checkRaceCompletionStatus())
         ){
-            foundNote.isNoteArchived = true
+            foundRace.isRaceFinished = true
             return true
         }
         return false
     }
 
     // ----------------------------------------------
-    //  LISTING METHODS FOR NOTE ArrayList
+    //  LISTING METHODS FOR RACE ArrayList
     // ----------------------------------------------
-    fun listAllNotes() =
-        if (notes.isEmpty()) "No notes stored"
-        else formatListString(notes)
+    fun listAllRaces() =
+        if (races.isEmpty()) "No races stored"
+        else formatListString(races)
 
-    fun listActiveNotes() =
-        if (numberOfActiveNotes() == 0) "No active notes stored"
-        else formatListString(notes.filter { note -> !note.isNoteArchived })
+    fun listFinishedRaces() =
+        if (numberOfFinishedRaces() == 0) "No finished races stored"
+        else formatListString(races.filter { race -> race.isRaceFinished })
 
-    fun listArchivedNotes() =
-        if (numberOfArchivedNotes() == 0) "No archived notes stored"
-        else formatListString(notes.filter { note -> note.isNoteArchived })
+    fun listFutureRaces() =
+        if (numberOfFutureRaces() == 0) "No future races stored"
+        else formatListString(races.filter { race -> !race.isRaceFinished })
 
     // ----------------------------------------------
-    //  COUNTING METHODS FOR NOTE ArrayList
+    //  COUNTING METHODS FOR RACE ArrayList
     // ----------------------------------------------
-    fun numberOfNotes() = notes.size
-    fun numberOfArchivedNotes(): Int = notes.count { note: Note -> note.isNoteArchived }
-    fun numberOfActiveNotes(): Int = notes.count { note: Note -> !note.isNoteArchived }
+    fun numberOfRaces() = races.size
+    fun numberOfFinishedRaces(): Int = races.count { race: Race -> race.isRaceFinished }
+    fun numberOfFutureRaces(): Int = races.count { race: Race -> !race.isRaceFinished }
 
     // ----------------------------------------------
     //  SEARCHING METHODS
     // ---------------------------------------------
-    fun findNote(noteId : Int) =  notes.find{ note -> note.noteId == noteId }
+    fun findRace(raceId : Int) =  races.find{ race -> race.raceId == raceId }
 
-    fun searchNotesByTitle(searchString: String) =
-        formatListString(notes.filter { note -> note.noteTitle.contains(searchString, ignoreCase = true) })
+    fun searchRacesByTitle(searchString: String) =
+        formatListString(races.filter { race -> race.raceTitle.contains(searchString, ignoreCase = true) })
 
 }
