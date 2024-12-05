@@ -14,13 +14,8 @@ fun main() = runMenu()
 fun runMenu() {
     do {
         when (val option = mainMenu()) {
-            1 -> addRace()
-            2 -> listRaces()
-            3 -> updateRace()
-            4 -> deleteRace()
-            5 -> addHorseToRace()
-            6 -> updateHorseContentsInRace()
-
+            1 -> raceMenu()
+            2 -> horseMenu()
             10 -> searchRaces()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
@@ -35,12 +30,8 @@ fun mainMenu() = readNextInt(
          > |                  RACE KEEPER APP                  |
          > -----------------------------------------------------  
          > | HORSE MENU                                         | 
-         > |   1) Add a race                                    |
-         > |   2) List races                                    |
-         > |   3) Update a race                                 |
-         > |   4) Delete a race                                 |
-         > |   5) Add Horse to race                             |
-         > |   6) Update Horse Contents in Race                 |
+         > |   1) Race Menu                                     |
+         > |   2) Horse Menu                                    |
          > -----------------------------------------------------  
          > | REPORT MENU FOR HORSES                             | 
          > |   10) Search for all horses (by race title)        |
@@ -89,7 +80,47 @@ fun listRaces() {
             else -> println("Invalid option entered: $option")
         }
     } else {
-        println("Option Invalid - No horses stored")
+        println("Option Invalid - No races stored")
+    }
+}
+
+fun raceMenu() {
+
+        val option = readNextInt(
+            """
+                  > --------------------------------
+                  > |   1) Add a Race               |
+                  > |   2) List Races               |
+                  > |   3) Update a Race            |
+                  > |   4) Delete a Race            |
+                  > --------------------------------
+         > ==>> """.trimMargin(">")
+        )
+
+        when (option) {
+            1 -> addRace()
+            2 -> listRaces()
+            3 -> updateRace()
+            4 -> deleteRace()
+            else -> println("Invalid option entered: $option")
+        }
+    }
+
+fun horseMenu() {
+
+    val option = readNextInt(
+        """
+                  > --------------------------------
+                  > |   1) Add a Horse               |
+                  > |   2) Update a Horse            |
+                  > --------------------------------
+         > ==>> """.trimMargin(">")
+    )
+
+    when (option) {
+        1 -> addHorseToRace()
+        2 -> updateHorseContentsInRace()
+        else -> println("Invalid option entered: $option")
     }
 }
 
