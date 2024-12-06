@@ -2,6 +2,18 @@ package ie.setu.models
 
 import utils.formatSetString
 
+/**
+ * Represents a race with its details and the associated horses.
+ *
+ * @property raceId Unique identifier for the race.
+ * @property raceTitle Title or name of the race.
+ * @property raceDistance Distance of the race in miles.
+ * @property raceClass The class/category of the race.
+ * @property raceStartTime The start time of the race.
+ * @property raceTrackCondition The condition of the track (e.g., Wet/Dry).
+ * @property isRaceFinished Whether the race is finished (`true`/`false`).
+ * @property horses A mutable set of horses participating in the race.
+ */
 
 data class Race(var raceId: Int = 0,
                 var raceTitle: String,

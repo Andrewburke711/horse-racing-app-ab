@@ -16,6 +16,12 @@ class RaceAPI() {
 
     // ----------------------------------------------
     //  CRUD METHODS FOR RACE ArrayList
+    /**
+     * Adds a new race to the list of races.
+     *
+     * @param race The race to add.
+     * @return `true` if the race is successfully added, `false` otherwise.
+     */
     // ----------------------------------------------
     fun add(race: Race): Boolean {
         race.raceId = getId()

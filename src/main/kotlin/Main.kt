@@ -34,7 +34,7 @@ fun mainMenu() = readNextInt(
          > |   2) Horse Menu                                    |
          > -----------------------------------------------------  
          > | REPORT MENU FOR HORSES                             | 
-         > |   10) Search for all horses (by race title)        |
+         > |   10) Search for all RACES (by race title)        |
          > -----------------------------------------------------  
          > |   0) Exit                                         |
          > -----------------------------------------------------  
@@ -43,6 +43,16 @@ fun mainMenu() = readNextInt(
 
 //------------------------------------
 //RACE MENU
+
+/**
+ * Adds a new race to the RaceAPI.
+ *
+ * Prompts the user for details about the race, including title, distance, class,
+ * start time, track condition, and whether the race is finished.
+ *
+ * If the race is successfully added, a success message is displayed, otherwise, a failure message is shown.
+ */
+
 //------------------------------------
 fun addRace() {
     val raceTitle = readNextLine("Enter a title for the race: ")
@@ -173,10 +183,10 @@ fun deleteRace() {
 //HORSE REPORTS MENU
 //------------------------------------
 fun searchRaces() {
-    val searchTitle = readNextLine("Enter the description to search by: ")
+    val searchTitle = readNextLine("Enter the race name to search by: ")
     val searchResults = raceAPI.searchRacesByTitle(searchTitle)
     if (searchResults.isEmpty()) {
-        println("No horses found")
+        println("No race found")
     } else {
         println(searchResults)
     }
