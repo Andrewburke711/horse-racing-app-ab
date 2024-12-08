@@ -55,6 +55,7 @@ fun mainMenu() = readNextInt(
 
 //------------------------------------
 fun addRace() {
+    println("\n--- Current Races: ${raceAPI.numberOfRaces()} ---")
     val raceTitle = readNextLine("Enter a title for the race: ")
     val raceDistance = readNextFloat("Enter a distance (Miles): ")
     val raceClass = readNextLine("Enter a class for the race: ")
@@ -65,9 +66,9 @@ fun addRace() {
     raceStartTime, raceTrackCondition = raceTrackCondition, isRaceFinished = isRaceFinished  ))
 
     if (isAdded) {
-        println("Added Successfully")
+        println("\n*** Race Added Successfully! ***\n")
     } else {
-        println("Add Failed")
+        println("\n!!! Add Race Failed. Try Again. !!!\n")
     }
 }
 
@@ -139,6 +140,7 @@ fun listFinishedRaces() = println(raceAPI.listFinishedRaces())
 fun listFutureRaces() = println(raceAPI.listFutureRaces())
 
 fun updateRace() {
+    println("\n--- Current Races: ${raceAPI.numberOfRaces()} ---")
     listRaces()
     if (raceAPI.numberOfRaces() > 0) {
         // only ask the user to choose the horse if horses exist
@@ -151,15 +153,16 @@ fun updateRace() {
             val raceTrackCondition = readNextLine("Enter a time for the race start: ")
             val isRaceFinished = readNextBoolean("Is race finished (True/False): ")
 
-            // pass the index of the horse and the new horse details to RaceAPI for updating and check for success.
-            if (raceAPI.update(id, Race(0, raceTitle, raceDistance, raceClass, raceStartTime, raceTrackCondition, isRaceFinished))) {
-                println("Update Successful")
+            if (raceAPI.update(id, Race(id, raceTitle, raceDistance, raceClass, raceStartTime, raceTrackCondition, isRaceFinished))) {
+                println("\n*** Race Updated Successfully! ***\n") // Enhanced success message
             } else {
-                println("Update Failed")
+                println("\n!!! Update Race Failed. Try Again. !!!\n") // Enhanced failure message
             }
         } else {
-            println("There are no horses for this index number")
+            println("\n!!! Race Not Found. !!!\n")
         }
+    } else {
+        println("\n!!! No Races Available to Update. !!!\n")
     }
 }
 
@@ -197,7 +200,7 @@ private fun addHorseToRace() {
     // Ask the user to choose an active race
     val race: Race? = askUserToChooseActiveRace()
     if (race != null) {
-
+        println("\n--- Current Horses in Race '${race.raceTitle}': ${race.numberOfHorses()} ---")
         // Prompt for horse details
         val horseName = readNextLine("Enter the horse's name: ")
         val horseSex = readNextLine("Enter the horse's sex (e.g., Male/Female): ")
@@ -215,10 +218,10 @@ private fun addHorseToRace() {
         )
 
         // Attempt to add the horse to the race
-        if (race.addHorse(newHorse)) {
-            println("Horse added successfully!")
+        if (race.addHorse(Horse(horseName = horseName, horseSex = horseSex, horseWeight = horseWeight, horseJockey = horseJockey, didHorseCompleteRace = didHorseCompleteRace))) {
+            println("\n*** Horse Added Successfully! ***\n") // Enhanced success message
         } else {
-            println("Failed to add horse. It might already exist.")
+            println("\n!!! Add Horse Failed. It Might Already Exist. !!!\n") // Enhanced failure message
         }
     }
 }
@@ -227,6 +230,7 @@ private fun addHorseToRace() {
 fun updateHorseContentsInRace() {
     val race: Race? = askUserToChooseActiveRace()
     if (race != null) {
+        println("\n--- Current Horses in Race '${race.raceTitle}': ${race.numberOfHorses()} ---") // Added feedback
         val horse: Horse? = askUserToChooseHorse(race)
         if (horse != null) {
             val horseName = readNextLine("Enter new horse name (or press Enter to keep '${horse.horseName}'): ")
@@ -245,13 +249,13 @@ fun updateHorseContentsInRace() {
                 didHorseCompleteRace = didHorseCompleteRace
             )
 
-            if (race.update(horse.horseId, updatedHorse)) {
-                println("Horse updated successfully!")
+            if (race.update(horse.horseId, Horse(horse.horseId, horseName, horseSex, horseWeight, horseJockey, didHorseCompleteRace))) {
+                println("\n*** Horse Updated Successfully! ***\n") // Enhanced success message
             } else {
-                println("Horse update failed.")
+                println("\n!!! Update Horse Failed. !!!\n") // Enhanced failure message
             }
         } else {
-            println("Invalid Horse ID")
+            println("\n!!! Horse Not Found. !!!\n")
         }
     }
 }
@@ -275,7 +279,7 @@ fun exitApp() {
 private fun askUserToChooseHorse(race: Race): Horse? {
     if (race.numberOfHorses() > 0) {
         print(race.listHorses())
-        return race.findOne(readNextInt("\nEnter the id of the horse: "))
+        return race.findOne(readNextInt("\nEnter the id of the race: "))
     }
     else{
         println ("No horses for chosen race")
@@ -289,7 +293,7 @@ private fun askUserToChooseHorse(race: Race): Horse? {
 private fun askUserToChooseActiveRace(): Race? {
     listAllRaces()
     if (raceAPI.numberOfRaces() > 0) {
-        val race = raceAPI.findRace(readNextInt("\nEnter the id of the horse: "))
+        val race = raceAPI.findRace(readNextInt("\nEnter the id of the race: "))
         if (race != null) {
             if (race.isRaceFinished) {
                 println("Race is NOT Active, it is Archived")
